@@ -31,6 +31,7 @@ const start = () => {
                     break;
                 case "View All Employees by Department":
                     console.log("See all employees by department");
+                    employeeByDepartment();
                     break;
                 case "Add Employee":
                     console.log("Add Employee selected");
@@ -57,6 +58,23 @@ const viewAllEmployees = () => {
         console.table(res);
         start();
     });    
+};
+
+const employeeByDepartment = () => {
+    inquirer
+        .prompt({
+            name: 'chosenDepartment',
+            type: 'input',
+            message: 'Which Department would you like to view the employees of?',
+        })
+        .then((answer) => {
+            let query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department_name FROM role JOIN employee ON employee.role_id = role.id JOIN department ON department.id = role.department_id WHERE ?"
+            connection.query(query, { department_name: answer.chosenDepartment }, (err, res) => {
+                if (err) throw err;
+                console.table(res);
+                start();
+            })
+        })    
 };
 
 connection.connect((err) => {
