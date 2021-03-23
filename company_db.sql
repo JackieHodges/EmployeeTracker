@@ -5,7 +5,7 @@ USE company_db;
 
 CREATE TABLE department (
 	id INT NOT NULL AUTO_INCREMENT, 
-	name VARCHAR (30) NOT NULL,
+	department_name VARCHAR (30) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -34,7 +34,7 @@ CREATE TABLE employee (
     PRIMARY KEY (id)
 );
 
-INSERT INTO department (name) VALUES 
+INSERT INTO department (department_name) VALUES 
 ("Human Resources"),
 ("IT"),
 ("Accounting");
