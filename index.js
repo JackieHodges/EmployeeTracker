@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const cTable = require('console.table');
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -15,12 +16,6 @@ const connection = mysql.createConnection({
     database: 'company_db',
 });
 
-connection.connect((err) => {
-    if (err) throw err;
-    console.log("Successful connection");
-    start();
-});
-
 const start = () => {
     inquirer
         .prompt({
@@ -32,7 +27,7 @@ const start = () => {
         .then((answer) => {
             switch (answer.wantTo) {
                 case "View All Employees":
-                    console.log("See all employees selected");
+                    viewAllEmployees();
                     break;
                 case "View All Employees by Department":
                     console.log("See all employees by department");
@@ -54,3 +49,17 @@ const start = () => {
             }
         });
 };
+
+const viewAllEmployees = () => {
+    connection.query('SELECT * FROM employee', (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        start();
+    });    
+};
+
+connection.connect((err) => {
+    if (err) throw err;
+    console.log("Successful connection");
+    start();
+});
