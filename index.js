@@ -1,6 +1,8 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
+let departmentOptions = [];
+let roleOptions = [];
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -35,9 +37,11 @@ const start = () => {
                     break;
                 case "Add Employee":
                     console.log("Add Employee selected");
+                    // createEmployee();
                     break;
                 case "Add Department":
                     console.log("Add Department selected");
+                    addDepartment();
                     break;
                 case "Add Role":
                     console.log("Add Role selected");
@@ -75,6 +79,67 @@ const employeeByDepartment = () => {
                 start();
             })
         })    
+};
+
+const createEmployee =  () => {
+    inquirer
+        .prompt([{
+            name: 'employeeFirstName',
+            type: 'input',
+            message: 'What is the first name of the new employee?',
+        },
+        {
+            name: 'employeeLastName',
+            type: 'input',
+            message: 'What is the last name of the new employee?',
+        },
+        {
+            name: 'employeeDepartment',
+            type: 'input',
+            message: 'What is the department of the new employee?',
+        },
+        {
+            name: 'employeeRole',
+            type: 'input',
+            message: 'What is the role of the new employee?',
+        },
+        {
+            name: 'employeeManager',
+            type: 'input',
+            message: 'Who is the manager of the new employee?',
+        }])
+        .then((answer) => {
+            let foundRoleId = connection.query("SELECT role.id FROM role WHERE role.title = ?", answer.employeeRole)
+            let query = "INSERT INTO employee SET ?";
+            connection.query(query, 
+                {
+                    first_name: answer.employeeFirstName,
+                    last_name: answer.employeeLastName,
+                    role_id: foundRoleId
+                }, 
+                (err, res) => {
+                    if (err) throw err;
+                    console.log(res);
+                    start();
+            })
+        })    
+};
+
+const addDepartment = () => {
+    inquirer
+    .prompt({
+        name: 'addedDepartment',
+        type: 'input',
+        message: 'What is the name of the department you would like to add?',
+    })
+    .then((answer) => {
+        let query = "INSERT INTO department SET ?"
+        connection.query(query, { department_name: answer.addedDepartment }, (err, res) => {
+            if (err) throw err;
+            console.log(answer.addedDepartment + " has been added.");
+            start();
+        })
+    })
 };
 
 connection.connect((err) => {
