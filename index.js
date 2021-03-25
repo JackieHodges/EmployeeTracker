@@ -37,7 +37,7 @@ const start = () => {
                     break;
                 case "Add Employee":
                     console.log("Add Employee selected");
-                    // createEmployee();
+                    createEmployee();
                     break;
                 case "Add Department":
                     console.log("Add Department selected");
@@ -45,6 +45,7 @@ const start = () => {
                     break;
                 case "Add Role":
                     console.log("Add Role selected");
+                    addRole();
                     break;
                 case "Update Employee Role":
                     console.log("Update employee role selected");
@@ -61,7 +62,7 @@ const viewAllEmployees = () => {
         if (err) throw err;
         console.table(res);
         start();
-    });    
+    });
 };
 
 const employeeByDepartment = () => {
@@ -78,10 +79,10 @@ const employeeByDepartment = () => {
                 console.table(res);
                 start();
             })
-        })    
+        })
 };
 
-const createEmployee =  () => {
+const createEmployee = () => {
     inquirer
         .prompt([{
             name: 'employeeFirstName',
@@ -109,37 +110,41 @@ const createEmployee =  () => {
             message: 'Who is the manager of the new employee?',
         }])
         .then((answer) => {
-            let foundRoleId = connection.query("SELECT role.id FROM role WHERE role.title = ?", answer.employeeRole)
-            let query = "INSERT INTO employee SET ?";
-            connection.query(query, 
-                {
-                    first_name: answer.employeeFirstName,
-                    last_name: answer.employeeLastName,
-                    role_id: foundRoleId
-                }, 
-                (err, res) => {
-                    if (err) throw err;
-                    console.log(res);
-                    start();
-            })
-        })    
+            let query2 = connection.query("SELECT id FROM role WHERE title = ?", [answer.employeeRole], (err, res) => {
+                let query = "INSERT INTO employee SET ?";
+                connection.query(query,
+                    [
+                        {
+                            first_name: answer.employeeFirstName,
+                            last_name: answer.employeeLastName,
+                            role_id: res[0].id
+                        },
+                    ],
+                    (err, res) => {
+                        if (err) throw err;
+                        console.log("New Employee Added");
+                        start();
+                    }
+                )
+            });
+        })
 };
 
 const addDepartment = () => {
     inquirer
-    .prompt({
-        name: 'addedDepartment',
-        type: 'input',
-        message: 'What is the name of the department you would like to add?',
-    })
-    .then((answer) => {
-        let query = "INSERT INTO department SET ?"
-        connection.query(query, { department_name: answer.addedDepartment }, (err, res) => {
-            if (err) throw err;
-            console.log(answer.addedDepartment + " has been added.");
-            start();
+        .prompt({
+            name: 'addedDepartment',
+            type: 'input',
+            message: 'What is the name of the department you would like to add?',
         })
-    })
+        .then((answer) => {
+            let query = "INSERT INTO department SET ?"
+            connection.query(query, { department_name: answer.addedDepartment }, (err, res) => {
+                if (err) throw err;
+                console.log(answer.addedDepartment + " has been added.");
+                start();
+            })
+        })
 };
 
 connection.connect((err) => {
