@@ -147,6 +147,46 @@ const addDepartment = () => {
         })
 };
 
+const addRole = () => {
+    inquirer
+        .prompt([
+        {
+            name: 'addedDepartment',
+            type: 'input',
+            message: 'What is the name of the department you would like to add the role to?',
+        },
+        {
+            name: 'addedRole',
+            type: 'input',
+            message: 'What is the name of the role you would like to add?',
+        },
+        {
+            name: 'addedSalary',
+            type: 'input',
+            message: 'What is the salary of the new role?',
+        },
+        ])
+        .then((answer) => {
+            let query2 = connection.query("SELECT id FROM department WHERE department_name = ?", [answer.addedDepartment], (err, res) => {
+                let query = "INSERT INTO role SET ?";
+                connection.query(query,
+                    [
+                        {
+                            title: answer.addedRole,
+                            salary: answer.addedSalary,
+                            department_id: res[0].id
+                        },
+                    ],
+                    (err, res) => {
+                        if (err) throw err;
+                        console.log("New Role Added");
+                        start();
+                    }
+                )
+            });
+        })
+};
+
 connection.connect((err) => {
     if (err) throw err;
     console.log("Successful connection");
