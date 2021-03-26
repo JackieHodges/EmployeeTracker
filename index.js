@@ -217,36 +217,53 @@ const addRole = () => {
 };
 
 updateEmployeeRole = () => {
-    inquirer
-        .prompt([
-            {
-                name: 'firstName',
-                type: 'input',
-                message: 'What is the first name of the employee would you like to update?',
-            },
-            {
-                name: 'lastName',
-                type: 'input',
-                message: 'What is the last name of the employee would you like to update?',
-            },
-            {
-                name: 'updatedRole',
-                type: 'input',
-                message: 'What would you like their new role to be?',
-            },
-        ])
-        .then((answer) => {
-            let query1 = "SELECT id FROM employee WHERE first_name = ? AND last_name =?";
-            connection.query(query1, [answer.firstName, answer.lastName], (err, res) => {
-                let query = "UPDATE employee SET role_id = (SELECT id FROM role WHERE title = ?) WHERE id = ?";
-                connection.query(query, [answer.updatedRole, res[0].id], (err, res) => {
-                    if (err) throw err;
-                    console.log("employee updated");
-                    start();
-                })   
-            })
+    connection.query("SELECT * FROM employee", (err, res) => {
+        if (err) throw err;
+        inquirer
+            .prompt([
+                {
+                    name: 'firstName',
+                    type: 'list',
+                    message: 'What is the first name of the employee would you like to update?',
+                    choices(){
+                        const firstNameArray = [];
+                        res.forEach(({first_name}) => {
+                            firstNameArray.push(first_name);
+                        });
+                        return firstNameArray;
+                    },                   
+                },
+                {
+                    name: 'lastName',
+                    type: 'list',
+                    message: 'What is the last name of the employee would you like to update?',
+                    choices(){
+                        const lastNameArray = [];
+                        res.forEach(({last_name}) => {
+                            lastNameArray.push(last_name);
+                        });
+                        return lastNameArray;
+                    },
+                },
+                {
+                    name: 'updatedRole',
+                    type: 'input',
+                    message: 'What would you like their new role to be?',
+                },
+            ])
+            .then((answer) => {
+                let query1 = "SELECT id FROM employee WHERE first_name = ? AND last_name =?";
+                connection.query(query1, [answer.firstName, answer.lastName], (err, res) => {
+                    let query = "UPDATE employee SET role_id = (SELECT id FROM role WHERE title = ?) WHERE id = ?";
+                    connection.query(query, [answer.updatedRole, res[0].id], (err, res) => {
+                        if (err) throw err;
+                        console.log("employee updated");
+                        start();
+                    })   
+                })
 
-        })
+            })
+    })
 
 };
 
