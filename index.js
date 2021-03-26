@@ -1,19 +1,14 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
+require('dotenv').config();
 
 const connection = mysql.createConnection({
     host: 'localhost',
-
-    // Your port; if not 3306
     port: 3306,
-
-    // Your username
-    user: 'root',
-
-    // Your password
-    password: process.env.PASSWORD,
-    database: 'company_db',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
 });
 
 const start = () => {
@@ -149,20 +144,20 @@ const addDepartment = () => {
 const addRole = () => {
     connection.query("SELECT * FROM department", (err, res) => {
         if (err) throw err;
-    
+
         inquirer
             .prompt([
                 {
                     name: 'addedDepartment',
                     type: 'list',
                     message: 'What is the name of the department you would like to add the role to?',
-                    choices(){
+                    choices() {
                         const departmentArray = [];
-                        res.forEach(({department_name}) => {
+                        res.forEach(({ department_name }) => {
                             departmentArray.push(department_name);
                         });
                         return departmentArray;
-                    },    
+                    },
                 },
                 {
                     name: 'addedRole',
@@ -206,21 +201,21 @@ updateEmployeeRole = () => {
                     name: 'firstName',
                     type: 'list',
                     message: 'What is the first name of the employee would you like to update?',
-                    choices(){
+                    choices() {
                         const firstNameArray = [];
-                        res.forEach(({first_name}) => {
+                        res.forEach(({ first_name }) => {
                             firstNameArray.push(first_name);
                         });
                         return firstNameArray;
-                    },                   
+                    },
                 },
                 {
                     name: 'lastName',
                     type: 'list',
                     message: 'What is the last name of the employee would you like to update?',
-                    choices(){
+                    choices() {
                         const lastNameArray = [];
-                        res.forEach(({last_name}) => {
+                        res.forEach(({ last_name }) => {
                             lastNameArray.push(last_name);
                         });
                         return lastNameArray;
@@ -240,7 +235,7 @@ updateEmployeeRole = () => {
                         if (err) throw err;
                         console.log("employee updated");
                         start();
-                    })   
+                    })
                 })
 
             })
