@@ -60,20 +60,30 @@ const viewAllEmployees = () => {
 };
 
 const employeeByDepartment = () => {
-    inquirer
-        .prompt({
-            name: 'chosenDepartment',
-            type: 'input',
-            message: 'Which Department would you like to view the employees of?',
-        })
-        .then((answer) => {
-            let query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department_name FROM role JOIN employee ON employee.role_id = role.id JOIN department ON department.id = role.department_id WHERE ?"
-            connection.query(query, { department_name: answer.chosenDepartment }, (err, res) => {
-                if (err) throw err;
-                console.table(res);
-                start();
+    connection.query("SELECT * FROM department", (err, res) => {
+        if (err) throw err;
+        inquirer
+            .prompt({
+                name: 'chosenDepartment',
+                type: 'list',
+                message: 'Which Department would you like to view the employees of?',
+                choices() {
+                    const departmentArray = [];
+                    res.forEach(({ department_name }) => {
+                        departmentArray.push(department_name);
+                    });
+                    return departmentArray;
+                },
             })
-        })
+            .then((answer) => {
+                let query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department_name FROM role JOIN employee ON employee.role_id = role.id JOIN department ON department.id = role.department_id WHERE ?"
+                connection.query(query, { department_name: answer.chosenDepartment }, (err, res) => {
+                    if (err) throw err;
+                    console.table(res);
+                    start();
+                })
+            })
+    })
 };
 
 const createEmployee = () => {
