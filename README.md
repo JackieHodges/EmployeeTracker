@@ -12,11 +12,12 @@ This application allows for non-developers to view and interact with employee da
 
 [MySQL](https://www.npmjs.com/package/mysql), [InquirerJs](https://www.npmjs.com/package/inquirer/v/0.2.3), and [console.table](https://www.npmjs.com/package/console.table) were used in this application.
 
-Future development will include the functionality with the delete buttons.
+Future development will include the ability to update employee managers, view employees by manager, delete employee/role/department, and view the combined salaries of a department.
 
 ## Table of Contents
 
 * [Installation](#installation)
+* [Usage](#usage)
 * [Credits](#credits)
 
 
@@ -24,13 +25,19 @@ Future development will include the functionality with the delete buttons.
 
 To install from GitHub, follow these steps:
 
-* Pull the repository found here: [Express JS Note Taker Repo](https://github.com/JackieHodges/ExpressJsNoteTaker)
+* Pull the repository found here: [Employee Tracker Repo](https://github.com/JackieHodges/EmployeeTracker)
 * Install dependencies by typing the following in the terminal: npm i
-* Once the dependence has been installed, run the application by entering: npm run start
+* Ensure you use the seed data provided in the SQL file (such as, in MYSQLWorkbench)
+* Once the dependence has been installed, run the application by entering: npm start
 
-Otherwise, this is where you can find the [Express JS Note Taker Herkou Deployed Page](https://afternoon-reef-37115.herokuapp.com/).
+
+## Usage
+
+Below is a video of application's functionality:
+
+![video](Assets/walkthru.gif)
 
 
 ## Credits
 
-[Express](https://expressjs.com/) and [fs](https://nodejs.org/api/fs.html) were used in this project. 
+[MySQL](https://www.npmjs.com/package/mysql), [InquirerJs](https://www.npmjs.com/package/inquirer/v/0.2.3), and [console.table](https://www.npmjs.com/package/console.table) were used in this application.
