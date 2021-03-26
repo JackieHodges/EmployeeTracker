@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const cTable = require('console.table');
 let departmentOptions = [];
 let roleOptions = [];
+let employeeOptions = [];
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -49,6 +50,7 @@ const start = () => {
                     break;
                 case "Update Employee Role":
                     console.log("Update employee role selected");
+                    updateEmployeeRole();
                     break;
                 case "Exit":
                     connection.end();
@@ -130,6 +132,33 @@ const createEmployee = () => {
         })
 };
 
+// const updateRoles = () => {
+//     connection.query("SELECT * FROM role", (err, res) => {
+//         console.log(`There are ${res.length} roles`);
+//         res.forEach(({ id, title, salary, department_id }) => {
+//             roleOptions.push({ id, title, salary, department_id })
+//         })
+//     })
+// };
+
+// const updateDepartment = () => {
+//     connection.query("SELECT * FROM department", (err, res) => {
+//         console.log(`There are ${res.length} departments`);
+//         res.forEach(({ id, department_name }) => {
+//             departmentOptions.push({ id, department_name })
+//         })
+//     })
+// };
+
+// const updateEmployee = () => {    
+//     connection.query("SELECT * FROM employee", (err, res) => {
+//         console.log(`There are ${res.length} employees`);
+//         res.forEach(({ id, first_name, last_name, role_id, manager_id }) => {
+//             employeeOptions.push({ id, first_name, last_name, role_id, manager_id })
+//         })
+//     })
+// };
+
 const addDepartment = () => {
     inquirer
         .prompt({
@@ -150,21 +179,21 @@ const addDepartment = () => {
 const addRole = () => {
     inquirer
         .prompt([
-        {
-            name: 'addedDepartment',
-            type: 'input',
-            message: 'What is the name of the department you would like to add the role to?',
-        },
-        {
-            name: 'addedRole',
-            type: 'input',
-            message: 'What is the name of the role you would like to add?',
-        },
-        {
-            name: 'addedSalary',
-            type: 'input',
-            message: 'What is the salary of the new role?',
-        },
+            {
+                name: 'addedDepartment',
+                type: 'input',
+                message: 'What is the name of the department you would like to add the role to?',
+            },
+            {
+                name: 'addedRole',
+                type: 'input',
+                message: 'What is the name of the role you would like to add?',
+            },
+            {
+                name: 'addedSalary',
+                type: 'input',
+                message: 'What is the salary of the new role?',
+            },
         ])
         .then((answer) => {
             let query2 = connection.query("SELECT id FROM department WHERE department_name = ?", [answer.addedDepartment], (err, res) => {
@@ -185,6 +214,40 @@ const addRole = () => {
                 )
             });
         })
+};
+
+updateEmployeeRole = () => {
+    inquirer
+        .prompt([
+            {
+                name: 'firstName',
+                type: 'input',
+                message: 'What is the first name of the employee would you like to update?',
+            },
+            {
+                name: 'lastName',
+                type: 'input',
+                message: 'What is the last name of the employee would you like to update?',
+            },
+            {
+                name: 'updatedRole',
+                type: 'input',
+                message: 'What would you like their new role to be?',
+            },
+        ])
+        .then((answer) => {
+            let query1 = "SELECT id FROM employee WHERE first_name = ? AND last_name =?";
+            connection.query(query1, [answer.firstName, answer.lastName], (err, res) => {
+                let query = "UPDATE employee SET role_id = (SELECT id FROM role WHERE title = ?) WHERE id = ?";
+                connection.query(query, [answer.updatedRole, res[0].id], (err, res) => {
+                    if (err) throw err;
+                    console.log("employee updated");
+                    start();
+                })   
+            })
+
+        })
+
 };
 
 connection.connect((err) => {
