@@ -1,9 +1,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
 const cTable = require('console.table');
-let departmentOptions = [];
-let roleOptions = [];
-let employeeOptions = [];
 
 const connection = mysql.createConnection({
     host: 'localhost',
@@ -131,33 +128,6 @@ const createEmployee = () => {
             });
         })
 };
-
-// const updateRoles = () => {
-//     connection.query("SELECT * FROM role", (err, res) => {
-//         console.log(`There are ${res.length} roles`);
-//         res.forEach(({ id, title, salary, department_id }) => {
-//             roleOptions.push({ id, title, salary, department_id })
-//         })
-//     })
-// };
-
-// const updateDepartment = () => {
-//     connection.query("SELECT * FROM department", (err, res) => {
-//         console.log(`There are ${res.length} departments`);
-//         res.forEach(({ id, department_name }) => {
-//             departmentOptions.push({ id, department_name })
-//         })
-//     })
-// };
-
-// const updateEmployee = () => {    
-//     connection.query("SELECT * FROM employee", (err, res) => {
-//         console.log(`There are ${res.length} employees`);
-//         res.forEach(({ id, first_name, last_name, role_id, manager_id }) => {
-//             employeeOptions.push({ id, first_name, last_name, role_id, manager_id })
-//         })
-//     })
-// };
 
 const addDepartment = () => {
     inquirer
