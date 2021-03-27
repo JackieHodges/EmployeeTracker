@@ -51,5 +51,5 @@ INSERT INTO role (title, salary, department_id) VALUES
 ("Accounting Intern", 65000, 3);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES
-("Jackie", "Pederson", 6, 2),
+("Jackie", "Hodges", 6, 2),
 ("Bryce", "Pederson", 7, 3);
