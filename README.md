@@ -33,9 +33,9 @@ To install from GitHub, follow these steps:
 
 ## Usage
 
-Below is a video of application's functionality:
+Below is a video of the application's functionality:
 
-![video](Assets/walkthru.gif)
+![video](Assets/EmployeeTracker.gif)
 
 
 ## Credits
